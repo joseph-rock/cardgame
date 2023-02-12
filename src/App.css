@@ -1,5 +1,4 @@
-RESET CSS 
-* {
+RESET CSS * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -21,7 +20,22 @@ RESET CSS
   color: #61dafb;
 }
 /* CARD STYLE */
-.card-wrapper {
+
+/* .board {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+} */
+
+.community {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.hand {
   display: flex;
   align-items: center;
   justify-content: center;

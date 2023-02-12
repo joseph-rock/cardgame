@@ -1,11 +1,10 @@
 import "./App.css";
-import CardsWrapper from "./components/CardsWrapper";
+import Board from "./components/Board";
 
 function App() {
   return (
     <div className="App">
-      <CardsWrapper cardsNumber="5" />
-      <CardsWrapper cardsNumber="2" />
+      <Board />
       <button onClick={() => window.location.reload()}>Reload Cards</button>
     </div>
   );
