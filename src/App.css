@@ -1,0 +1,52 @@
+RESET CSS 
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* GLOBALS  STYLE */
+.App {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  background-color: #282c34;
+  flex-wrap: wrap;
+}
+
+.App-link {
+  color: #61dafb;
+}
+/* CARD STYLE */
+.card-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.card-container {
+  border-radius: 7px;
+  margin: 10px;
+}
+
+/* BUTTON SECTION */
+button {
+  background: none;
+  border: 1px solid #fff;
+  outline: none;
+  margin: 0.1rem;
+  padding: 0.4rem;
+  font: inherit;
+  font-size: 0.75rem;
+  line-height: 1;
+  color: #fff;
+  cursor: pointer;
+}
+button:hover {
+  background-color: #fff;
+  color: #444;
+}
