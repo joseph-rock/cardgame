@@ -1,19 +1,6 @@
-import drawCard from "../drawCard.js";
 import CardImage from "./CardImage";
 
-function Board() {
-  let currentCards = [];
-  let hand = [];
-  let community = [];
-
-  while (community.length < 5) {
-    community.push(drawCard(currentCards));
-  }
-
-  while (hand.length < 2) {
-    hand.push(drawCard(currentCards));
-  }
-
+function Board({ community, hand }) {
   return (
     <div className="board">
       <div className="community">
