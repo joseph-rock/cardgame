@@ -1,7 +1,3 @@
-import drawCard from "./drawCard.js";
-import { symbols, numbers } from "./data.js";
-import Card from "./Card.js";
-
 function bestHand(cards) {
   const cardsCopy = [...cards];
   if (isRoyalFlush(cardsCopy)) return "Royal Flush";
