@@ -3,17 +3,16 @@ import { symbols, numbers } from "./data.js";
 import Card from "./Card.js";
 
 function bestHand(cards) {
-  const copy = new Array(...cards);
-
-  if (isRoyalFlush(copy)) return "Royal Flush";
-  if (isStraightFlush(copy)) return "Straight Flush";
-  if (isFourOfAKind(copy)) return "Four of a Kind";
-  if (isFullHouse(copy)) return "Full House";
-  if (isFlush(copy)) return "Flush";
-  if (isStraight(copy)) return "Straight";
-  if (isThreeOfAKind(copy)) return "Three of a Kind";
-  if (isTwoPair(copy)) return "Two Pair";
-  if (isPair(copy)) return "Pair";
+  const cardsCopy = [...cards];
+  if (isRoyalFlush(cardsCopy)) return "Royal Flush";
+  if (isStraightFlush(cardsCopy)) return "Straight Flush";
+  if (isFourOfAKind(cardsCopy)) return "Four of a Kind";
+  if (isFullHouse(cardsCopy)) return "Full House";
+  if (isFlush(cardsCopy)) return "Flush";
+  if (isStraight(cardsCopy)) return "Straight";
+  if (isThreeOfAKind(cardsCopy)) return "Three of a Kind";
+  if (isTwoPair(cardsCopy)) return "Two Pair";
+  if (isPair(cardsCopy)) return "Pair";
 
   return "High Card";
 }
@@ -23,6 +22,15 @@ function isPair(cards) {
 }
 
 function isTwoPair(cards) {
+  const copy = sortByValue(cards);
+
+  for (let i = 0; i < cards.length - 1; i++) {
+    if (copy[i].id === copy[i + 1].id) {
+      copy.splice(i, 2);
+      return isPair(copy);
+    }
+  }
+
   return false;
 }
 
@@ -32,7 +40,6 @@ function isThreeOfAKind(cards) {
 
 function isStraight(cards) {
   const copy = removeDuplicateValues(cards);
-
   if (copy.length < 5) return false;
 
   for (let i = 4; i < cards.length; i++) {
@@ -41,29 +48,30 @@ function isStraight(cards) {
     }
   }
 
-  if (
+  return isHighStraight(copy);
+}
+
+function isHighStraight(cards) {
+  const copy = removeDuplicateValues(cards);
+  return (
     copy[copy.length - 1].id === 12 &&
     copy[0].id === 0 &&
     copy[copy.length - 1].id - copy[copy.length - 4].id === 3
-  ) {
-    return true;
-  }
-
-  return false;
+  );
 }
 
 function isFlush(cards) {
-  const copy = sortBySuite(cards);
-
-  for (let i = 4; i < cards.length; i++) {
-    if (copy[i].suite.localeCompare(copy[i - 4].suite) === 0) {
-      return true;
-    }
-  }
-  return false;
+  return flushSuite(cards) !== null;
 }
 
 function isFullHouse(cards) {
+  const copy = sortByValue(cards);
+  for (let i = 0; i < cards.length - 2; i++) {
+    if (copy[i].id === copy[i + 2].id) {
+      copy.splice(i, 3);
+      return isPair(copy) || isThreeOfAKind(copy);
+    }
+  }
   return false;
 }
 
@@ -73,23 +81,24 @@ function isFourOfAKind(cards) {
 
 function isStraightFlush(cards) {
   const copy = removeDuplicateValues(cards);
-  return isStraight(copy) && isFlush(copy);
+  const suite = flushSuite(copy);
+  return suite !== null && isStraight(flushCards(copy, suite));
 }
 
 function isRoyalFlush(cards) {
-  return false;
+  const copy = removeDuplicateValues(cards);
+  const suite = flushSuite(copy);
+  return suite !== null && isHighStraight(flushCards(copy, suite));
 }
 
-//----------------------------------------------------------------------
-
 function sortByValue(cards) {
-  const copy = new Array(...cards);
+  const copy = [...cards];
   copy.sort((a, b) => a.id - b.id);
   return copy;
 }
 
 function sortBySuite(cards) {
-  const copy = new Array(...cards);
+  const copy = [...cards];
   copy.sort((a, b) => a.suite.localeCompare(b.suite));
   return copy;
 }
@@ -99,6 +108,20 @@ function removeDuplicateValues(cards) {
   return copy.filter((card, index) =>
     index !== copy.length - 1 ? card.id !== copy[index + 1].id : true
   );
+}
+
+function flushSuite(cards) {
+  const copy = sortBySuite(cards);
+  for (let i = 4; i < cards.length; i++) {
+    if (copy[i].suite.localeCompare(copy[i - 4].suite) === 0) {
+      return copy[i].suite;
+    }
+  }
+  return null;
+}
+
+function flushCards(cards, suite) {
+  return cards.filter((card) => card.suite.localeCompare(suite) === 0);
 }
 
 function pairOfSize(cards, size = 1) {
@@ -113,36 +136,4 @@ function pairOfSize(cards, size = 1) {
   return false;
 }
 
-//----------------------------------------------------------
-
-function randomCardTest() {
-  let drawn = [];
-  let cards = [];
-  while (cards.length < 7) {
-    cards.push(drawCard(drawn));
-  }
-  cards.sort((a, b) => a.id - b.id);
-
-  console.log(cards);
-  console.log(bestHand(cards));
-}
-
-function genCard(id, suite) {
-  return new Card({
-    id: id,
-    value: numbers[id].number,
-    suite: symbols[suite].name,
-  });
-}
-
-const c1 = genCard(12, 0);
-const c2 = genCard(11, 1);
-const c3 = genCard(10, 0);
-const c4 = genCard(9, 0);
-const c5 = genCard(0, 0);
-const foo = [c1, c2, c3, c4, c5];
-
-console.log(bestHand(foo), foo);
-
-// const bar = removeDuplicateValues(foo);
-// console.log(bar);
+export default bestHand;
