@@ -2,18 +2,13 @@ import "./App.css";
 import { useState } from "react";
 import Board from "./components/Board";
 import drawCard from "./drawCard.js";
-
-import Start from "./components/Start";
-import Deal from "./components/Deal";
-import Flop from "./components/Flop";
-import Turn from "./components/Turn";
-import River from "./components/River";
+import { Deal, Flop, Turn, River, Refresh } from "./components/DealButton.js";
 
 function App() {
   let currentCards = [];
   const [communityCards, setCommunityCards] = useState([]);
   const [playerCards, setPlayerCards] = useState([]);
-  const [game, setGame] = useState("start");
+  const [game, setGame] = useState("deal");
 
   const handleClick = (gameState) => {
     setGame(gameState);
@@ -32,12 +27,8 @@ function App() {
       <Board community={communityCards} hand={playerCards} />
       {(() => {
         switch (game) {
-          case "start":
-            return <Start handleClick={handleClick} dealPlayer={dealPlayer} />;
           case "deal":
-            return (
-              <Deal handleClick={handleClick} dealCommunity={dealCommunity} />
-            );
+            return <Deal handleClick={handleClick} dealPlayer={dealPlayer} />;
           case "flop":
             return (
               <Flop handleClick={handleClick} dealCommunity={dealCommunity} />
@@ -47,7 +38,11 @@ function App() {
               <Turn handleClick={handleClick} dealCommunity={dealCommunity} />
             );
           case "river":
-            return <River />;
+            return (
+              <River handleClick={handleClick} dealCommunity={dealCommunity} />
+            );
+          case "refresh":
+            return <Refresh />;
           default:
             return null;
         }
