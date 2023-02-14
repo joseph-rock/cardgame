@@ -21,25 +21,35 @@ RESET CSS * {
 }
 /* CARD STYLE */
 
-/* .board {
+.board {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-} */
+  flex-direction: column;
+  row-gap: 2em;
+  width: 75%;
+  height: 75%;
+}
 
 .community {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
+  height: minmax(100px, auto);
+  width: minmax(375px, auto);
+  /* background-color: green; */
 }
 
 .hand {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: center;
   flex-wrap: wrap;
+  height: minmax(100px, auto);
+  width: minmax(150px, auto);
+  /* background-color: green; */
 }
 
 .card-container {

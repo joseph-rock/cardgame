@@ -1,24 +1,57 @@
 import "./App.css";
+import { useState } from "react";
 import Board from "./components/Board";
 import drawCard from "./drawCard.js";
 
+import Start from "./components/Start";
+import Deal from "./components/Deal";
+import Flop from "./components/Flop";
+import Turn from "./components/Turn";
+import River from "./components/River";
+
 function App() {
   let currentCards = [];
-  let handCards = [];
-  let communityCards = [];
+  const [communityCards, setCommunityCards] = useState([]);
+  const [playerCards, setPlayerCards] = useState([]);
+  const [game, setGame] = useState("start");
 
-  while (communityCards.length < 5) {
-    communityCards.push(drawCard(currentCards));
-  }
+  const handleClick = (gameState) => {
+    setGame(gameState);
+  };
 
-  while (handCards.length < 2) {
-    handCards.push(drawCard(currentCards));
-  }
+  const dealPlayer = () => {
+    setPlayerCards((cards) => [...cards, drawCard(currentCards)]);
+  };
+
+  const dealCommunity = () => {
+    setCommunityCards((cards) => [...cards, drawCard(currentCards)]);
+  };
 
   return (
     <div className="App">
-      <Board community={communityCards} hand={handCards} />
-      <button onClick={() => window.location.reload()}>Reload Cards</button>
+      <Board community={communityCards} hand={playerCards} />
+      {(() => {
+        switch (game) {
+          case "start":
+            return <Start handleClick={handleClick} dealPlayer={dealPlayer} />;
+          case "deal":
+            return (
+              <Deal handleClick={handleClick} dealCommunity={dealCommunity} />
+            );
+          case "flop":
+            return (
+              <Flop handleClick={handleClick} dealCommunity={dealCommunity} />
+            );
+          case "turn":
+            return (
+              <Turn handleClick={handleClick} dealCommunity={dealCommunity} />
+            );
+          case "river":
+            return <River />;
+          default:
+            return null;
+        }
+      })()}
     </div>
   );
 }
