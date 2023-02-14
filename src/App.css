@@ -57,6 +57,12 @@ RESET CSS * {
   margin: 10px;
 }
 
+.cardplaceholder-container {
+  border-radius: 7px;
+  margin: 10px;
+  visibility: hidden;
+}
+
 /* BUTTON SECTION */
 button {
   background: none;
