@@ -1,11 +1,11 @@
 import "./App.css";
 import { useState } from "react";
 import Board from "./components/Board";
-import drawCard from "./drawCard.js";
+import Deck from "./Deck";
 import { Deal, Flop, Turn, River, Refresh } from "./components/DealButton.js";
 
 function App() {
-  let currentCards = [];
+  const deck = new Deck();
   const [communityCards, setCommunityCards] = useState([]);
   const [playerCards, setPlayerCards] = useState([]);
   const [game, setGame] = useState("deal");
@@ -15,11 +15,11 @@ function App() {
   };
 
   const dealPlayer = () => {
-    setPlayerCards((cards) => [...cards, drawCard(currentCards)]);
+    setPlayerCards((cards) => [...cards, deck.drawCard()]);
   };
 
   const dealCommunity = () => {
-    setCommunityCards((cards) => [...cards, drawCard(currentCards)]);
+    setCommunityCards((cards) => [...cards, deck.drawCard()]);
   };
 
   return (
