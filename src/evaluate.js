@@ -1,5 +1,6 @@
 function bestHand(cards) {
   const cardsCopy = [...cards];
+  if (cardsCopy.length === 0) return "";
   if (isRoyalFlush(cardsCopy)) return "Royal Flush";
   if (isStraightFlush(cardsCopy)) return "Straight Flush";
   if (isFourOfAKind(cardsCopy)) return "Four of a Kind";

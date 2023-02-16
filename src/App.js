@@ -1,5 +1,5 @@
 import "./App.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Board from "./components/Board";
 import Deck from "./Deck";
 import { Deal, Flop, Turn, River, Refresh } from "./components/DealButton.js";
@@ -26,27 +26,31 @@ function App() {
   const [game, setGame] = useState("deal");
   const [handDescription, setHandDescription] = useState("");
 
+  useEffect(() => {
+    if (communityCards.length !== 0) {
+      setHandDescription(bestHand([...communityCards, ...playerCards]));
+    }
+  }, [communityCards, playerCards]);
+
   const handleClick = (gameState) => {
     setGame(gameState);
   };
 
-  const dealCard = (action) => {
-    const card = deck.drawCard();
+  const dealCard = (action, amt) => {
     switch (action) {
       case DEAL_ACTION.PLAYER:
-        setPlayerCards((cards) => [...cards, card]);
+        for (let i = 0; i < amt; i++) {
+          setPlayerCards((cards) => [...cards, deck.drawCard()]);
+        }
         break;
       case DEAL_ACTION.COMMUNITY:
-        setCommunityCards((cards) => [...cards, card]);
+        for (let i = 0; i < amt; i++) {
+          setCommunityCards((cards) => [...cards, deck.drawCard()]);
+        }
         break;
       default:
         return;
     }
-    evaluate();
-  };
-
-  const evaluate = () => {
-    setHandDescription(() => bestHand([...communityCards, ...playerCards]));
   };
 
   return (
