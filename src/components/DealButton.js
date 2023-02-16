@@ -4,8 +4,8 @@ export function Deal(props) {
       <button
         onClick={() => {
           props.handleClick("flop");
-          props.dealPlayer();
-          props.dealPlayer();
+          props.dealPlayer("player");
+          props.dealPlayer("player");
         }}
       >
         Deal
@@ -20,9 +20,9 @@ export function Flop(props) {
       <button
         onClick={() => {
           props.handleClick("turn");
-          props.dealCommunity();
-          props.dealCommunity();
-          props.dealCommunity();
+          props.dealCommunity("community");
+          props.dealCommunity("community");
+          props.dealCommunity("community");
         }}
       >
         Flop
@@ -37,7 +37,7 @@ export function Turn(props) {
       <button
         onClick={() => {
           props.handleClick("river");
-          props.dealCommunity();
+          props.dealCommunity("community");
         }}
       >
         Turn
@@ -52,7 +52,7 @@ export function River(props) {
       <button
         onClick={() => {
           props.handleClick("refresh");
-          props.dealCommunity();
+          props.dealCommunity("community");
         }}
       >
         River
