@@ -37,8 +37,7 @@ function isThreeOfAKind(cards) {
 function isStraight(cards) {
   const copy = removeDuplicateValues(cards);
   if (copy.length < 5) return false;
-
-  for (let i = 4; i < cards.length; i++) {
+  for (let i = 4; i < copy.length; i++) {
     if (copy[i].id - copy[i - 4].id === 4) {
       return true;
     }
@@ -102,7 +101,7 @@ function sortBySuite(cards) {
 function removeDuplicateValues(cards) {
   const copy = sortByValue(cards);
   return copy.filter((card, index) =>
-    index !== copy.length - 1 ? card.id !== copy[index + 1].id : true
+    index + 1 === copy.length ? card : card.id !== copy[index + 1].id
   );
 }
 

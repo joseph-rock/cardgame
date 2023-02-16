@@ -181,3 +181,18 @@ describe("Check Straight Flush", () => {
     expect(bestHand(cards)).toBe("Royal Flush");
   });
 });
+
+describe("Bug", () => {
+  test("Bug 1", () => {
+    const cards = [
+      genCard({ cardValue: 7, suiteID: 0 }),
+      genCard({ cardValue: 4, suiteID: 2 }),
+      genCard({ cardValue: 1, suiteID: 3 }),
+      genCard({ cardValue: 7, suiteID: 3 }),
+      genCard({ cardValue: 9, suiteID: 3 }),
+      genCard({ cardValue: 11, suiteID: 3 }),
+      genCard({ cardValue: 13, suiteID: 1 }),
+    ];
+    expect(bestHand(cards)).toBe("Pair");
+  });
+});
