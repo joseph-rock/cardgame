@@ -5,7 +5,6 @@ export function Deal(props) {
         onClick={() => {
           props.dealPlayer("player", 2);
           props.handleClick("flop");
-          props.evaluate();
         }}
       >
         Deal
@@ -21,7 +20,6 @@ export function Flop(props) {
         onClick={() => {
           props.dealCommunity("community", 3);
           props.handleClick("turn");
-          props.evaluate();
         }}
       >
         Flop
@@ -37,7 +35,6 @@ export function Turn(props) {
         onClick={() => {
           props.dealCommunity("community", 1);
           props.handleClick("river");
-          props.evaluate();
         }}
       >
         Turn
@@ -53,7 +50,6 @@ export function River(props) {
         onClick={() => {
           props.dealCommunity("community", 1);
           props.handleClick("refresh");
-          props.evaluate();
         }}
       >
         River
@@ -67,7 +63,8 @@ export function Refresh(props) {
     <div className="Refresh">
       <button
         onClick={() => {
-          window.location.reload(false);
+          props.handleClick("deal");
+          props.restart();
         }}
       >
         Refresh

@@ -63,7 +63,7 @@ RESET CSS * {
   visibility: hidden;
 }
 
-/* BUTTON SECTION */
+/* BUTTON */
 button {
   background: none;
   border: 1px solid #fff;
@@ -79,4 +79,13 @@ button {
 button:hover {
   background-color: #fff;
   color: #444;
+}
+
+/* HAND DESCRIPTION*/
+
+label {
+  font-size: large;
+  color: #b4886b;
+  font-weight: bold;
+  float: left;
 }

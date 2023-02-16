@@ -23,6 +23,10 @@ class Deck {
     this.drawnCards.push(card);
     return card;
   }
+
+  reset() {
+    this.drawnCards = [];
+  }
 }
 
 export default Deck;

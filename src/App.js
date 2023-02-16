@@ -2,6 +2,7 @@ import "./App.css";
 import { useEffect, useState } from "react";
 import Board from "./components/Board";
 import Deck from "./Deck";
+import HandDescription from "./components/HandDescription";
 import { Deal, Flop, Turn, River, Refresh } from "./components/DealButton.js";
 import bestHand from "./evaluate";
 
@@ -21,19 +22,13 @@ const GAME_STATE = {
 const deck = new Deck();
 
 function App() {
+  const [gameState, setGameState] = useState("deal");
   const [communityCards, setCommunityCards] = useState([]);
   const [playerCards, setPlayerCards] = useState([]);
-  const [game, setGame] = useState("deal");
-  const [handDescription, setHandDescription] = useState("");
-
-  useEffect(() => {
-    if (communityCards.length !== 0) {
-      setHandDescription(bestHand([...communityCards, ...playerCards]));
-    }
-  }, [communityCards, playerCards]);
+  const [handDescription, setHandDescription] = useState("Best Hand");
 
   const handleClick = (gameState) => {
-    setGame(gameState);
+    setGameState(gameState);
   };
 
   const dealCard = (action, amt) => {
@@ -49,16 +44,29 @@ function App() {
         }
         break;
       default:
-        return;
+        break;
     }
   };
 
+  const restart = () => {
+    deck.reset();
+    setPlayerCards([]);
+    setCommunityCards([]);
+    setHandDescription("Best Hand");
+  };
+
+  useEffect(() => {
+    if (communityCards.length !== 0) {
+      setHandDescription(bestHand([...communityCards, ...playerCards]));
+    }
+  }, [communityCards, playerCards]);
+
   return (
     <div className="App">
-      <label>Best Hand: {handDescription}</label>
+      <HandDescription handDescription={handDescription} />
       <Board community={communityCards} hand={playerCards} />
       {(() => {
-        switch (game) {
+        switch (gameState) {
           case GAME_STATE.DEAL:
             return <Deal handleClick={handleClick} dealPlayer={dealCard} />;
           case GAME_STATE.FLOP:
@@ -68,7 +76,7 @@ function App() {
           case GAME_STATE.RIVER:
             return <River handleClick={handleClick} dealCommunity={dealCard} />;
           case GAME_STATE.REFRESH:
-            return <Refresh />;
+            return <Refresh handleClick={handleClick} restart={restart} />;
           default:
             return null;
         }
