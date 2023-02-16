@@ -31,20 +31,22 @@ function App() {
   };
 
   const dealCard = (action) => {
+    const card = deck.drawCard();
     switch (action) {
       case DEAL_ACTION.PLAYER:
-        setPlayerCards((cards) => [...cards, deck.drawCard()]);
-        return;
+        setPlayerCards((cards) => [...cards, card]);
+        break;
       case DEAL_ACTION.COMMUNITY:
-        setCommunityCards((cards) => [...cards, deck.drawCard()]);
-        return;
+        setCommunityCards((cards) => [...cards, card]);
+        break;
       default:
         return;
     }
+    evaluate();
   };
 
   const evaluate = () => {
-    setHandDescription(bestHand(deck.drawnCards));
+    setHandDescription(() => bestHand([...communityCards, ...playerCards]));
   };
 
   return (
