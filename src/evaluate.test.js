@@ -96,6 +96,17 @@ describe("Check Pairs", () => {
 describe("Check Straight", () => {
   test("Low Straight", () => {
     const cards = [
+      genCard({ cardValue: 1, suiteID: 0 }),
+      genCard({ cardValue: 2, suiteID: 1 }),
+      genCard({ cardValue: 3, suiteID: 2 }),
+      genCard({ cardValue: 4, suiteID: 3 }),
+      genCard({ cardValue: 5, suiteID: 0 }),
+    ];
+    expect(bestHand(cards)).toBe("Straight");
+  });
+
+  test("Middle Straight", () => {
+    const cards = [
       genCard({ cardValue: 2, suiteID: 0 }),
       genCard({ cardValue: 3, suiteID: 1 }),
       genCard({ cardValue: 5, suiteID: 2 }),
@@ -183,7 +194,7 @@ describe("Check Straight Flush", () => {
 });
 
 describe("Bug", () => {
-  test("Bug 1", () => {
+  test("Pair incorrectly throwing error", () => {
     const cards = [
       genCard({ cardValue: 7, suiteID: 0 }),
       genCard({ cardValue: 4, suiteID: 2 }),
