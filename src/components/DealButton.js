@@ -1,10 +1,12 @@
+import { DEAL_ACTION, GAME_STATE } from "../data";
+
 export function Deal(props) {
   return (
     <div className="Deal">
       <button
         onClick={() => {
-          props.dealPlayer("player", 2);
-          props.handleClick("flop");
+          props.dealPlayer(DEAL_ACTION.PLAYER, 2);
+          props.handleClick(GAME_STATE.FLOP);
         }}
       >
         Deal
@@ -18,8 +20,8 @@ export function Flop(props) {
     <div className="Flop">
       <button
         onClick={() => {
-          props.dealCommunity("community", 3);
-          props.handleClick("turn");
+          props.dealCommunity(DEAL_ACTION.COMMUNITY, 3);
+          props.handleClick(GAME_STATE.TURN);
         }}
       >
         Flop
@@ -33,8 +35,8 @@ export function Turn(props) {
     <div className="Turn">
       <button
         onClick={() => {
-          props.dealCommunity("community", 1);
-          props.handleClick("river");
+          props.dealCommunity(DEAL_ACTION.COMMUNITY, 1);
+          props.handleClick(GAME_STATE.RIVER);
         }}
       >
         Turn
@@ -48,8 +50,8 @@ export function River(props) {
     <div className="River">
       <button
         onClick={() => {
-          props.dealCommunity("community", 1);
-          props.handleClick("refresh");
+          props.dealCommunity(DEAL_ACTION.COMMUNITY, 1);
+          props.handleClick(GAME_STATE.REFRESH);
         }}
       >
         River
@@ -63,7 +65,7 @@ export function Refresh(props) {
     <div className="Refresh">
       <button
         onClick={() => {
-          props.handleClick("deal");
+          props.handleClick(GAME_STATE.DEAL);
           props.restart();
         }}
       >
