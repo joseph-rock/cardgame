@@ -1,9 +1,11 @@
 import "./App.css";
 import { useEffect, useState } from "react";
+
 import Board from "./components/Board";
-import Deck from "./Deck";
 import HandDescription from "./components/HandDescription";
 import { Deal, Flop, Turn, River, Refresh } from "./components/DealButton.js";
+
+import Deck from "./Deck";
 import bestHand from "./evaluate";
 
 const DEAL_ACTION = {
@@ -22,7 +24,7 @@ const GAME_STATE = {
 const deck = new Deck();
 
 function App() {
-  const [gameState, setGameState] = useState("deal");
+  const [gameState, setGameState] = useState(GAME_STATE.DEAL);
   const [communityCards, setCommunityCards] = useState([]);
   const [playerCards, setPlayerCards] = useState([]);
   const [handDescription, setHandDescription] = useState("Best Hand");

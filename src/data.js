@@ -71,3 +71,16 @@ export const symbols = [
     name: "diamonds",
   },
 ];
+
+export const DEAL_ACTION = {
+  PLAYER: "player",
+  COMMUNITY: "community",
+};
+
+export const GAME_STATE = {
+  DEAL: "deal",
+  FLOP: "flop",
+  TURN: "turn",
+  RIVER: "river",
+  REFRESH: "refresh",
+};
