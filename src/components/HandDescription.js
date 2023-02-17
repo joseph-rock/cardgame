@@ -3,9 +3,9 @@ import CardImagePlaceholder from "./CardImagePlaceholder";
 
 const HandDescription = ({ handDescription, bestCards }) => {
   return (
-    <div>
-      <div className="hand-description">{<label>{handDescription}</label>}</div>
-      <div className="best-cards">
+    <div className="hand-description">
+      <div>{<label>{handDescription}</label>}</div>
+      <div className="community">
         {Array(5)
           .fill(<CardImagePlaceholder />)
           .map((current, index) =>
