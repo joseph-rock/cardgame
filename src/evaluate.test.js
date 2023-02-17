@@ -204,7 +204,10 @@ describe("Check Flush", () => {
     const f = genCard({ cardValue: 7, suiteID: 0 });
 
     const cards = [a, b, c, d, e, f];
-    expect(bestHand(cards)).toBe("Flush");
+    const hand = evaluate(cards);
+
+    expect(hand.handDescription).toBe(HAND.FLUSH);
+    expect(hand.bestCards).toStrictEqual([a, e, d, f, c]);
   });
 
   test("Spades with Pair", () => {

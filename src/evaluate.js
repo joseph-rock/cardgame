@@ -51,7 +51,7 @@ export function evaluate(cards) {
   };
 }
 
-export function bestHand(cards) {
+function bestHand(cards) {
   if (cards.length === 0) return "";
   if (isRoyalFlush([...cards])) return HAND.ROYAL_FLUSH;
   if (isStraightFlush([...cards])) return HAND.STRAIGHT_FLUSH;
