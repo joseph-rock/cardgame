@@ -28,28 +28,8 @@ RESET CSS * {
   flex-wrap: wrap;
   flex-direction: column;
   row-gap: 2em;
-  width: 75%;
-  height: 75%;
-}
-
-.community {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  height: minmax(100px, auto);
-  width: minmax(375px, auto);
-  /* background-color: green; */
-}
-
-.hand {
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-  flex-wrap: wrap;
-  height: minmax(100px, auto);
-  width: minmax(150px, auto);
-  /* background-color: green; */
+  width: 50%;
+  height: 50%;
 }
 
 .card-container {
@@ -83,9 +63,47 @@ button:hover {
 
 /* HAND DESCRIPTION*/
 
+.hand-description {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex-direction: column;
+  background-color: darkslategray;
+  height: minmax(100px, auto);
+  width: minmax(375px, auto);
+  padding: 20px;
+  border-style: solid;
+  border-color: black;
+  border-radius: 8px;
+}
+
+.community {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  height: minmax(100px, auto);
+  width: minmax(375px, auto);
+}
+
+.hand {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: wrap;
+  height: minmax(100px, auto);
+  width: minmax(150px, auto);
+}
+
 label {
   font-size: large;
-  color: #b4886b;
+  color: black;
   font-weight: bold;
   float: left;
+}
+
+img {
+  width: 110%;
+  height: 110%;
 }
