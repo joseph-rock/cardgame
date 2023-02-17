@@ -11,6 +11,11 @@ export const HAND = {
   HIGH_CARD: "High Card",
 };
 
+/**
+ *
+ * @param {*} cards
+ * @returns {*}
+ */
 export function evaluate(cards) {
   const handDescription = bestHand([...cards]);
   let bestCards = bestHighCards([...cards]);
@@ -67,14 +72,34 @@ function bestHand(cards) {
 
 //------------Determine Best Hand-----------------
 
+function pairOfSize(cards, windowOffset = 1) {
+  const copy = sortByValue(cards);
+
+  for (let i = 0; i < copy.length - windowOffset; i++) {
+    if (copy[i].id === copy[i + windowOffset].id) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 function isPair(cards) {
   return pairOfSize(cards);
+}
+
+function isThreeOfAKind(cards) {
+  return pairOfSize(cards, 2);
+}
+
+function isFourOfAKind(cards) {
+  return pairOfSize(cards, 3);
 }
 
 function isTwoPair(cards) {
   const copy = sortByValue(cards);
 
-  for (let i = 0; i < cards.length - 1; i++) {
+  for (let i = 0; i < copy.length - 1; i++) {
     if (copy[i].id === copy[i + 1].id) {
       copy.splice(i, 2);
       return isPair(copy);
@@ -84,38 +109,9 @@ function isTwoPair(cards) {
   return false;
 }
 
-function isThreeOfAKind(cards) {
-  return pairOfSize(cards, 2);
-}
-
-function isStraight(cards) {
-  const copy = sortByValue(removeDuplicateValues(cards));
-  if (copy.length < 5) return false;
-  for (let i = 4; i < copy.length; i++) {
-    if (copy[i].id - copy[i - 4].id === 4) {
-      return true;
-    }
-  }
-
-  return isHighStraight(cards);
-}
-
-function isHighStraight(cards) {
-  const copy = sortByValue(removeDuplicateValues([...cards]));
-  return (
-    copy[copy.length - 1].id === 12 &&
-    copy[0].id === 0 &&
-    copy[copy.length - 1].id - copy[copy.length - 4].id === 3
-  );
-}
-
-function isFlush(cards) {
-  return flushSuite(cards) !== null;
-}
-
 function isFullHouse(cards) {
   const copy = sortByValue(cards);
-  for (let i = 0; i < cards.length - 2; i++) {
+  for (let i = 0; i < copy.length - 2; i++) {
     if (copy[i].id === copy[i + 2].id) {
       copy.splice(i, 3);
       return isPair(copy) || isThreeOfAKind(copy);
@@ -124,13 +120,17 @@ function isFullHouse(cards) {
   return false;
 }
 
-function isFourOfAKind(cards) {
-  return pairOfSize(cards, 3);
+function isStraight(cards) {
+  return bestStraightCards(cards) !== null;
+}
+
+function isFlush(cards) {
+  return flushSuite(cards) !== null;
 }
 
 function isStraightFlush(cards) {
-  const suite = flushSuite([...cards]);
-  const flushCards = allFlushCards(cards, suite);
+  const suite = flushSuite(cards);
+  const flushCards = cardsOfSuite(cards, suite);
 
   return suite !== null && isStraight(flushCards);
 }
@@ -138,18 +138,17 @@ function isStraightFlush(cards) {
 function isRoyalFlush(cards) {
   const copy = removeDuplicateValues(cards);
   const suite = flushSuite(copy);
-  return suite !== null && isHighStraight(allFlushCards(copy, suite));
+  return suite !== null && isHighStraight(cardsOfSuite(copy, suite));
 }
 
 //-----------Cards of Best Hand--------------
 
 function bestHighCards(cards, returnCards = []) {
-  const reverseSorted = reverseSortByValue(cards);
-  const copy = makeAceHigh(reverseSorted);
+  const reverseSorted = reverseSortByValue(cards, true);
 
   // Fill returnCard list until 5 cards are present
   while (returnCards.length < 5) {
-    returnCards.push(copy.shift());
+    returnCards.push(reverseSorted.shift());
   }
   return returnCards;
 }
@@ -157,7 +156,7 @@ function bestHighCards(cards, returnCards = []) {
 function bestPairOfSizeCards(cards, size = 1, returnCards = []) {
   const copy = reverseSortByValue(cards);
 
-  for (let i = 0; i < cards.length - size; i++) {
+  for (let i = 0; i < copy.length - size; i++) {
     if (copy[i].id === copy[i + size].id) {
       returnCards.push(...copy.splice(i, size + 1));
     }
@@ -184,7 +183,7 @@ function bestTwoPairCards(cards) {
     }
   }
 
-  return bestHighCards(copy, makeAceHigh(returnCards));
+  return bestHighCards(copy, returnCards);
 }
 
 function bestFullHouseCards(cards) {
@@ -207,16 +206,17 @@ function bestFullHouseCards(cards) {
 }
 
 function bestFlushCards(cards) {
-  const copy = allFlushCards(cards, flushSuite(cards));
-  return makeAceHigh(reverseSortByValue(copy).slice(0, 5));
+  const suite = flushSuite(cards);
+  const flushCards = cardsOfSuite(cards, suite);
+  const ordered = reverseSortByValue(flushCards, true);
+  return ordered.slice(0, 5);
 }
 
 function bestStraightCards(cards) {
-  const copy = removeDuplicateValues([...cards]);
+  const copy = removeDuplicateValues(cards);
   const revOrderCopy = reverseSortByValue(copy);
 
-  // Check if Ace to be High
-  if (isHighStraight(copy)) {
+  if (isHighStraight(revOrderCopy)) {
     revOrderCopy.unshift(revOrderCopy.pop());
     return revOrderCopy.slice(0, 5);
   }
@@ -231,27 +231,55 @@ function bestStraightCards(cards) {
 }
 
 function bestStraightFlushCards(cards) {
-  const flushCards = allFlushCards(cards, flushSuite(cards));
+  const flushCards = cardsOfSuite(cards, flushSuite(cards));
   return bestStraightCards(flushCards);
 }
 
 //-----------Utils---------------
 
+/**
+ * Returns copy of a list of Card objects and sorts low to high based on card value.
+ * Ace is lowest value, King is highest value.
+ */
 function sortByValue(cards) {
-  cards.sort((a, b) => a.id - b.id);
-  return cards;
+  const copy = [...cards];
+  copy.sort((a, b) => a.id - b.id);
+  return copy;
 }
 
-function reverseSortByValue(cards) {
-  cards.sort((a, b) => b.id - a.id);
-  return cards;
+/**
+ * Returns copy of a list of Card objects and sorts high to low based on card value.
+ * Ace is lowest value, King is highest value.
+ * Option aceHigh will make Two lowest and Ace highest.
+ */
+function reverseSortByValue(cards, aceHigh = false) {
+  const copy = [...cards];
+  copy.sort((a, b) => b.id - a.id);
+
+  if (aceHigh) {
+    while (
+      copy.some((card) => card.id !== 0) &&
+      copy[copy.length - 1].id === 0
+    ) {
+      copy.unshift(copy.pop());
+    }
+  }
+
+  return copy;
 }
 
+/**
+ * Returns copy of a list of Card objects grouped by suite
+ */
 function sortBySuite(cards) {
-  cards.sort((a, b) => a.suite.localeCompare(b.suite));
-  return cards;
+  const copy = [...cards];
+  copy.sort((a, b) => a.suite.localeCompare(b.suite));
+  return copy;
 }
 
+/**
+ * Returns sorted list of cards with duplicate values removed
+ */
 function removeDuplicateValues(cards) {
   const copy = sortByValue(cards);
   return copy.filter((card, index) =>
@@ -259,9 +287,13 @@ function removeDuplicateValues(cards) {
   );
 }
 
+/**
+ * Determines if 5 or more Cards share the same suite. Returns the
+ * suite or null if not found.
+ */
 function flushSuite(cards) {
   const copy = sortBySuite(cards);
-  for (let i = 4; i < cards.length; i++) {
+  for (let i = 4; i < copy.length; i++) {
     if (copy[i].suite.localeCompare(copy[i - 4].suite) === 0) {
       return copy[i].suite;
     }
@@ -269,28 +301,23 @@ function flushSuite(cards) {
   return null;
 }
 
-function allFlushCards(cards, suite) {
+/**
+ * Returns copy of Card list containing only cards of a specific Suite
+ */
+function cardsOfSuite(cards, suite) {
   return cards.filter((card) => card.suite.localeCompare(suite) === 0);
 }
 
-function pairOfSize(cards, size = 1) {
-  const copy = sortByValue(cards);
-
-  for (let i = size; i < cards.length; i++) {
-    if (copy[i].id === copy[i - size].id) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-function makeAceHigh(cards) {
-  const copy = reverseSortByValue(cards);
-  while (copy.some((card) => card.id !== 0) && copy[copy.length - 1].id === 0) {
-    copy.unshift(copy.pop());
-  }
-  return copy;
+/**
+ * Check edgecase to determine if 10 J Q K A present
+ */
+function isHighStraight(cards) {
+  const copy = removeDuplicateValues(cards);
+  return (
+    copy[copy.length - 1].id === 12 &&
+    copy[0].id === 0 &&
+    copy[copy.length - 1].id - copy[copy.length - 4].id === 3
+  );
 }
 
 export default evaluate;
