@@ -6,43 +6,37 @@ import HandDescription from "./components/HandDescription";
 import { Deal, Flop, Turn, River, Refresh } from "./components/DealButton.js";
 
 import Deck from "./Deck";
-import bestHand from "./evaluate";
+import evaluate from "./evaluate";
+import { DEAL_ACTION, GAME_STATE } from "./data";
 
-const DEAL_ACTION = {
-  PLAYER: "player",
-  COMMUNITY: "community",
-};
-
-const GAME_STATE = {
-  DEAL: "deal",
-  FLOP: "flop",
-  TURN: "turn",
-  RIVER: "river",
-  REFRESH: "refresh",
-};
-
-const deck = new Deck();
+const DECK = new Deck();
 
 function App() {
   const [gameState, setGameState] = useState(GAME_STATE.DEAL);
   const [communityCards, setCommunityCards] = useState([]);
   const [playerCards, setPlayerCards] = useState([]);
+
   const [handDescription, setHandDescription] = useState("Best Hand");
+  const [bestCards, setBestCards] = useState([]);
 
-  const handleClick = (gameState) => {
-    setGameState(gameState);
-  };
+  useEffect(() => {
+    if (communityCards.length !== 0) {
+      const hand = evaluate([...communityCards, ...playerCards]);
+      setHandDescription(hand.handDescription);
+      setBestCards(hand.bestCards);
+    }
+  }, [communityCards, playerCards]);
 
-  const dealCard = (action, amt) => {
+  const dealCard = (action, amount) => {
     switch (action) {
       case DEAL_ACTION.PLAYER:
-        for (let i = 0; i < amt; i++) {
-          setPlayerCards((cards) => [...cards, deck.drawCard()]);
+        for (let i = 0; i < amount; i++) {
+          setPlayerCards((cards) => [...cards, DECK.drawCard()]);
         }
         break;
       case DEAL_ACTION.COMMUNITY:
-        for (let i = 0; i < amt; i++) {
-          setCommunityCards((cards) => [...cards, deck.drawCard()]);
+        for (let i = 0; i < amount; i++) {
+          setCommunityCards((cards) => [...cards, DECK.drawCard()]);
         }
         break;
       default:
@@ -51,21 +45,23 @@ function App() {
   };
 
   const restart = () => {
-    deck.reset();
+    DECK.reset();
     setPlayerCards([]);
     setCommunityCards([]);
     setHandDescription("Best Hand");
+    setBestCards([]);
   };
 
-  useEffect(() => {
-    if (communityCards.length !== 0) {
-      setHandDescription(bestHand([...communityCards, ...playerCards]));
-    }
-  }, [communityCards, playerCards]);
+  const handleClick = (gameState) => {
+    setGameState(gameState);
+  };
 
   return (
     <div className="App">
-      <HandDescription handDescription={handDescription} />
+      <HandDescription
+        handDescription={handDescription}
+        bestCards={bestCards}
+      />
       <Board community={communityCards} hand={playerCards} />
       {(() => {
         switch (gameState) {
@@ -80,7 +76,7 @@ function App() {
           case GAME_STATE.REFRESH:
             return <Refresh handleClick={handleClick} restart={restart} />;
           default:
-            return null;
+            return <Refresh handleClick={handleClick} restart={restart} />;
         }
       })()}
     </div>
