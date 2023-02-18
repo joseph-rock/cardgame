@@ -1,14 +1,14 @@
 class Card {
-  constructor({ id, value, suite }) {
-    this.id = id;
-    this.value = value;
+  constructor({ number, name, suite }) {
+    this.number = number;
+    this.name = name;
     this.suite = suite;
   }
 
   equals(card) {
     return (
-      this.id === card.id &&
-      this.value === card.value &&
+      this.number === card.number &&
+      this.name === card.name &&
       this.suite === card.suite
     );
   }

@@ -10,9 +10,9 @@ function Board({ community, hand }) {
           .map((current, index) =>
             index < community.length ? (
               <CardImage
-                key={community[index].suite + community[index].value}
+                key={community[index].suite + community[index].name}
                 suite={community[index].suite}
-                value={community[index].value}
+                value={community[index].name}
               />
             ) : (
               current
@@ -25,9 +25,9 @@ function Board({ community, hand }) {
           .map((current, index) =>
             index < hand.length ? (
               <CardImage
-                key={hand[index].suite + hand[index].value}
+                key={hand[index].suite + hand[index].name}
                 suite={hand[index].suite}
-                value={hand[index].value}
+                value={hand[index].name}
               />
             ) : (
               current

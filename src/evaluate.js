@@ -76,7 +76,7 @@ function pairOfSize(cards, windowOffset = 1) {
   const copy = sortByValue(cards);
 
   for (let i = 0; i < copy.length - windowOffset; i++) {
-    if (copy[i].id === copy[i + windowOffset].id) {
+    if (copy[i].number === copy[i + windowOffset].number) {
       return true;
     }
   }
@@ -100,7 +100,7 @@ function isTwoPair(cards) {
   const copy = sortByValue(cards);
 
   for (let i = 0; i < copy.length - 1; i++) {
-    if (copy[i].id === copy[i + 1].id) {
+    if (copy[i].number === copy[i + 1].number) {
       copy.splice(i, 2);
       return isPair(copy);
     }
@@ -112,7 +112,7 @@ function isTwoPair(cards) {
 function isFullHouse(cards) {
   const copy = sortByValue(cards);
   for (let i = 0; i < copy.length - 2; i++) {
-    if (copy[i].id === copy[i + 2].id) {
+    if (copy[i].number === copy[i + 2].number) {
       copy.splice(i, 3);
       return isPair(copy) || isThreeOfAKind(copy);
     }
@@ -157,7 +157,7 @@ function bestPairOfSizeCards(cards, size = 1, returnCards = []) {
   const copy = reverseSortByValue(cards);
 
   for (let i = 0; i < copy.length - size; i++) {
-    if (copy[i].id === copy[i + size].id) {
+    if (copy[i].number === copy[i + size].number) {
       returnCards.push(...copy.splice(i, size + 1));
     }
   }
@@ -170,14 +170,14 @@ function bestTwoPairCards(cards) {
   let returnCards = [];
 
   for (let i = 0; i < copy.length - 1; i++) {
-    if (copy[i].id === copy[i + 1].id) {
+    if (copy[i].number === copy[i + 1].number) {
       returnCards = copy.splice(i, 2);
       break;
     }
   }
 
   for (let i = 0; i < copy.length - 1; i++) {
-    if (copy[i].id === copy[i + 1].id) {
+    if (copy[i].number === copy[i + 1].number) {
       returnCards.push(...copy.splice(i, 2));
       break;
     }
@@ -190,14 +190,14 @@ function bestFullHouseCards(cards) {
   const copy = reverseSortByValue(cards);
   let returnCards = [];
   for (let i = 0; i < copy.length - 2; i++) {
-    if (copy[i].id === copy[i + 2].id) {
+    if (copy[i].number === copy[i + 2].number) {
       returnCards = copy.splice(i, 3);
       break;
     }
   }
 
   for (let i = 0; i < copy.length - 1; i++) {
-    if (copy[i].id === copy[i + 1].id) {
+    if (copy[i].number === copy[i + 1].number) {
       returnCards.push(...copy.splice(i, 2));
       return returnCards;
     }
@@ -222,7 +222,7 @@ function bestStraightCards(cards) {
   }
 
   for (let i = 0; i < revOrderCopy.length - 4; i++) {
-    if (revOrderCopy[i].id - revOrderCopy[i + 4].id === 4) {
+    if (revOrderCopy[i].number - revOrderCopy[i + 4].number === 4) {
       return revOrderCopy.slice(i, i + 5);
     }
   }
@@ -243,7 +243,7 @@ function bestStraightFlushCards(cards) {
  */
 function sortByValue(cards) {
   const copy = [...cards];
-  copy.sort((a, b) => a.id - b.id);
+  copy.sort((a, b) => a.number - b.number);
   return copy;
 }
 
@@ -254,12 +254,12 @@ function sortByValue(cards) {
  */
 function reverseSortByValue(cards, aceHigh = false) {
   const copy = [...cards];
-  copy.sort((a, b) => b.id - a.id);
+  copy.sort((a, b) => b.number - a.number);
 
   if (aceHigh) {
     while (
-      copy.some((card) => card.id !== 0) &&
-      copy[copy.length - 1].id === 0
+      copy.some((card) => card.number !== 0) &&
+      copy[copy.length - 1].number === 0
     ) {
       copy.unshift(copy.pop());
     }
@@ -283,7 +283,7 @@ function sortBySuite(cards) {
 function removeDuplicateValues(cards) {
   const copy = sortByValue(cards);
   return copy.filter((card, index) =>
-    index + 1 === copy.length ? card : card.id !== copy[index + 1].id
+    index + 1 === copy.length ? card : card.number !== copy[index + 1].number
   );
 }
 
@@ -314,9 +314,9 @@ function cardsOfSuite(cards, suite) {
 function isHighStraight(cards) {
   const copy = removeDuplicateValues(cards);
   return (
-    copy[copy.length - 1].id === 12 &&
-    copy[0].id === 0 &&
-    copy[copy.length - 1].id - copy[copy.length - 4].id === 3
+    copy[copy.length - 1].number === 12 &&
+    copy[0].number === 0 &&
+    copy[copy.length - 1].number - copy[copy.length - 4].number === 3
   );
 }
 

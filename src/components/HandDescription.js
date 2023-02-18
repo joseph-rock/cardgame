@@ -11,9 +11,9 @@ const HandDescription = ({ handDescription, bestCards }) => {
           .map((current, index) =>
             index < bestCards.length ? (
               <CardImage
-                key={bestCards[index].suite + bestCards[index].value}
+                key={bestCards[index].suite + bestCards[index].name}
                 suite={bestCards[index].suite}
-                value={bestCards[index].value}
+                value={bestCards[index].name}
               />
             ) : (
               current
