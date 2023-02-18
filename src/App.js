@@ -66,13 +66,13 @@ function App() {
       {(() => {
         switch (gameState) {
           case GAME_STATE.DEAL:
-            return <Deal handleClick={handleClick} dealPlayer={dealCard} />;
+            return <Deal handleClick={handleClick} dealCard={dealCard} />;
           case GAME_STATE.FLOP:
-            return <Flop handleClick={handleClick} dealCommunity={dealCard} />;
+            return <Flop handleClick={handleClick} dealCard={dealCard} />;
           case GAME_STATE.TURN:
-            return <Turn handleClick={handleClick} dealCommunity={dealCard} />;
+            return <Turn handleClick={handleClick} dealCard={dealCard} />;
           case GAME_STATE.RIVER:
-            return <River handleClick={handleClick} dealCommunity={dealCard} />;
+            return <River handleClick={handleClick} dealCard={dealCard} />;
           case GAME_STATE.REFRESH:
             return <Refresh handleClick={handleClick} restart={restart} />;
           default:
