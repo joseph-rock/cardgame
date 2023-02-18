@@ -139,7 +139,7 @@ function bestHighCards(cards, returnCards = []) {
 }
 
 function bestPairOfSizeCards(cards, windowOffset = 1, returnCards = []) {
-  const reverseSorted = reverseSortByValue(cards);
+  const reverseSorted = reverseSortByValue(cards, true);
 
   for (let i = 0; i < reverseSorted.length - windowOffset; i++) {
     if (reverseSorted[i].number === reverseSorted[i + windowOffset].number) {
