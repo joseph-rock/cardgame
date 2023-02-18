@@ -1,29 +1,24 @@
-import { symbols, numbers } from "./data.js";
+import { SUITE, VALUE, HAND } from "./data.js";
 import Card from "./Card.js";
-import { bestHand, evaluate, HAND } from "./evaluate.js";
+import evaluate from "./evaluate.js";
 
-function genCard({ cardValue, suiteID } = {}) {
-  const id = cardValue - 1;
+function genCard({ value, suite } = {}) {
   return new Card({
-    id: id,
-    value: numbers[id].number,
-    suite: symbols[suiteID].name,
+    number: value.number,
+    name: value.name,
+    suite: suite.name,
   });
-}
-
-function compare(a, b) {
-  return a.every((card, index) => card.equals(b[index]));
 }
 
 describe("Check High Card", () => {
   test("King High", () => {
-    const a = genCard({ cardValue: 13, suiteID: 0 });
-    const b = genCard({ cardValue: 8, suiteID: 1 });
-    const c = genCard({ cardValue: 7, suiteID: 2 });
-    const d = genCard({ cardValue: 2, suiteID: 3 });
-    const e = genCard({ cardValue: 9, suiteID: 0 });
-    const f = genCard({ cardValue: 3, suiteID: 1 });
-    const g = genCard({ cardValue: 4, suiteID: 1 });
+    const a = genCard({ value: VALUE.KING, suite: SUITE.CLUBS });
+    const b = genCard({ value: VALUE.EIGHT, suite: SUITE.DIAMONDS });
+    const c = genCard({ value: VALUE.SEVEN, suite: SUITE.HEARTS });
+    const d = genCard({ value: VALUE.TWO, suite: SUITE.SPADES });
+    const e = genCard({ value: VALUE.NINE, suite: SUITE.CLUBS });
+    const f = genCard({ value: VALUE.THREE, suite: SUITE.DIAMONDS });
+    const g = genCard({ value: VALUE.FOUR, suite: SUITE.DIAMONDS });
 
     const cards = [a, b, c, d, e, f, g];
     const hand = evaluate(cards);
@@ -33,11 +28,11 @@ describe("Check High Card", () => {
   });
 
   test("Ace High", () => {
-    const a = genCard({ cardValue: 1, suiteID: 0 });
-    const b = genCard({ cardValue: 8, suiteID: 1 });
-    const c = genCard({ cardValue: 7, suiteID: 2 });
-    const d = genCard({ cardValue: 2, suiteID: 3 });
-    const e = genCard({ cardValue: 9, suiteID: 0 });
+    const a = genCard({ value: VALUE.ACE, suite: SUITE.CLUBS });
+    const b = genCard({ value: VALUE.EIGHT, suite: SUITE.DIAMONDS });
+    const c = genCard({ value: VALUE.SEVEN, suite: SUITE.HEARTS });
+    const d = genCard({ value: VALUE.TWO, suite: SUITE.CLUBS });
+    const e = genCard({ value: VALUE.NINE, suite: SUITE.CLUBS });
 
     const cards = [a, b, c, d, e];
     const hand = evaluate(cards);
@@ -49,11 +44,11 @@ describe("Check High Card", () => {
 
 describe("Check Pairs", () => {
   test("Pair of Twos", () => {
-    const a = genCard({ cardValue: 1, suiteID: 0 });
-    const b = genCard({ cardValue: 8, suiteID: 1 });
-    const c = genCard({ cardValue: 2, suiteID: 2 });
-    const d = genCard({ cardValue: 2, suiteID: 3 });
-    const e = genCard({ cardValue: 9, suiteID: 0 });
+    const a = genCard({ value: VALUE.ACE, suite: SUITE.CLUBS });
+    const b = genCard({ value: VALUE.EIGHT, suite: SUITE.DIAMONDS });
+    const c = genCard({ value: VALUE.TWO, suite: SUITE.CLUBS });
+    const d = genCard({ value: VALUE.TWO, suite: SUITE.CLUBS });
+    const e = genCard({ value: VALUE.NINE, suite: SUITE.CLUBS });
 
     const cards = [a, b, c, d, e];
     const hand = evaluate(cards);
@@ -61,13 +56,12 @@ describe("Check Pairs", () => {
     expect(hand.handDescription).toBe(HAND.PAIR);
     expect(hand.bestCards).toStrictEqual([c, d, a, e, b]);
   });
-
   test("Three of a Kind Aces", () => {
-    const a = genCard({ cardValue: 1, suiteID: 0 });
-    const b = genCard({ cardValue: 8, suiteID: 1 });
-    const c = genCard({ cardValue: 12, suiteID: 2 });
-    const d = genCard({ cardValue: 1, suiteID: 3 });
-    const e = genCard({ cardValue: 1, suiteID: 0 });
+    const a = genCard({ value: VALUE.ACE, suite: SUITE.CLUBS });
+    const b = genCard({ value: VALUE.EIGHT, suite: SUITE.CLUBS });
+    const c = genCard({ value: VALUE.QUEEN, suite: SUITE.CLUBS });
+    const d = genCard({ value: VALUE.ACE, suite: SUITE.CLUBS });
+    const e = genCard({ value: VALUE.ACE, suite: SUITE.DIAMONDS });
 
     const cards = [a, b, c, d, e];
     const hand = evaluate(cards);
@@ -75,13 +69,12 @@ describe("Check Pairs", () => {
     expect(hand.handDescription).toBe(HAND.THREE_OF_A_KIND);
     expect(hand.bestCards).toStrictEqual([a, d, e, c, b]);
   });
-
   test("Four of a Kind Fours", () => {
-    const a = genCard({ cardValue: 4, suiteID: 0 });
-    const b = genCard({ cardValue: 4, suiteID: 1 });
-    const c = genCard({ cardValue: 12, suiteID: 2 });
-    const d = genCard({ cardValue: 4, suiteID: 3 });
-    const e = genCard({ cardValue: 4, suiteID: 0 });
+    const a = genCard({ value: VALUE.FOUR, suite: SUITE.CLUBS });
+    const b = genCard({ value: VALUE.FOUR, suite: SUITE.DIAMONDS });
+    const c = genCard({ value: VALUE.QUEEN, suite: SUITE.SPADES });
+    const d = genCard({ value: VALUE.FOUR, suite: SUITE.HEARTS });
+    const e = genCard({ value: VALUE.FOUR, suite: SUITE.SPADES });
 
     const cards = [a, b, c, d, e];
     const hand = evaluate(cards);
@@ -89,13 +82,12 @@ describe("Check Pairs", () => {
     expect(hand.handDescription).toBe(HAND.FOUR_OF_A_KIND);
     expect(hand.bestCards).toStrictEqual([a, b, d, e, c]);
   });
-
   test("Two Pair Kings Nines", () => {
-    const a = genCard({ cardValue: 13, suiteID: 0 });
-    const b = genCard({ cardValue: 13, suiteID: 1 });
-    const c = genCard({ cardValue: 12, suiteID: 2 });
-    const d = genCard({ cardValue: 9, suiteID: 3 });
-    const e = genCard({ cardValue: 9, suiteID: 0 });
+    const a = genCard({ value: VALUE.KING, suite: SUITE.CLUBS });
+    const b = genCard({ value: VALUE.KING, suite: SUITE.DIAMONDS });
+    const c = genCard({ value: VALUE.QUEEN, suite: SUITE.CLUBS });
+    const d = genCard({ value: VALUE.NINE, suite: SUITE.CLUBS });
+    const e = genCard({ value: VALUE.NINE, suite: SUITE.DIAMONDS });
 
     const cards = [a, b, c, d, e];
     const hand = evaluate(cards);
@@ -103,13 +95,12 @@ describe("Check Pairs", () => {
     expect(hand.handDescription).toBe(HAND.TWO_PAIR);
     expect(hand.bestCards).toStrictEqual([a, b, d, e, c]);
   });
-
   test("Full House 3 Tens 2 Jacks", () => {
-    const a = genCard({ cardValue: 10, suiteID: 0 });
-    const b = genCard({ cardValue: 10, suiteID: 1 });
-    const c = genCard({ cardValue: 10, suiteID: 2 });
-    const d = genCard({ cardValue: 11, suiteID: 3 });
-    const e = genCard({ cardValue: 11, suiteID: 0 });
+    const a = genCard({ value: VALUE.TEN, suite: SUITE.SPADES });
+    const b = genCard({ value: VALUE.TEN, suite: SUITE.CLUBS });
+    const c = genCard({ value: VALUE.TEN, suite: SUITE.DIAMONDS });
+    const d = genCard({ value: VALUE.JACK, suite: SUITE.SPADES });
+    const e = genCard({ value: VALUE.JACK, suite: SUITE.DIAMONDS });
 
     const cards = [a, b, c, d, e];
     const hand = evaluate(cards);
@@ -117,14 +108,13 @@ describe("Check Pairs", () => {
     expect(hand.handDescription).toBe(HAND.FULL_HOUSE);
     expect(hand.bestCards).toStrictEqual([a, b, c, d, e]);
   });
-
   test("Full House 2 Three of a Kind", () => {
-    const a = genCard({ cardValue: 10, suiteID: 0 });
-    const b = genCard({ cardValue: 10, suiteID: 1 });
-    const c = genCard({ cardValue: 10, suiteID: 2 });
-    const d = genCard({ cardValue: 11, suiteID: 3 });
-    const e = genCard({ cardValue: 11, suiteID: 0 });
-    const f = genCard({ cardValue: 11, suiteID: 1 });
+    const a = genCard({ value: VALUE.TEN, suite: SUITE.SPADES });
+    const b = genCard({ value: VALUE.TEN, suite: SUITE.HEARTS });
+    const c = genCard({ value: VALUE.TEN, suite: SUITE.CLUBS });
+    const d = genCard({ value: VALUE.JACK, suite: SUITE.SPADES });
+    const e = genCard({ value: VALUE.JACK, suite: SUITE.HEARTS });
+    const f = genCard({ value: VALUE.JACK, suite: SUITE.CLUBS });
 
     const cards = [a, b, c, d, e, f];
     const hand = evaluate(cards);
@@ -136,11 +126,11 @@ describe("Check Pairs", () => {
 
 describe("Check Straight", () => {
   test("Low Straight", () => {
-    const a = genCard({ cardValue: 1, suiteID: 0 });
-    const b = genCard({ cardValue: 2, suiteID: 1 });
-    const c = genCard({ cardValue: 3, suiteID: 2 });
-    const d = genCard({ cardValue: 4, suiteID: 3 });
-    const e = genCard({ cardValue: 5, suiteID: 0 });
+    const a = genCard({ value: VALUE.ACE, suite: SUITE.SPADES });
+    const b = genCard({ value: VALUE.TWO, suite: SUITE.SPADES });
+    const c = genCard({ value: VALUE.THREE, suite: SUITE.SPADES });
+    const d = genCard({ value: VALUE.FOUR, suite: SUITE.DIAMONDS });
+    const e = genCard({ value: VALUE.FIVE, suite: SUITE.DIAMONDS });
 
     const cards = [a, b, c, d, e];
     const hand = evaluate(cards);
@@ -150,11 +140,11 @@ describe("Check Straight", () => {
   });
 
   test("Middle Straight", () => {
-    const a = genCard({ cardValue: 2, suiteID: 0 });
-    const b = genCard({ cardValue: 3, suiteID: 1 });
-    const c = genCard({ cardValue: 5, suiteID: 2 });
-    const d = genCard({ cardValue: 6, suiteID: 3 });
-    const e = genCard({ cardValue: 4, suiteID: 0 });
+    const a = genCard({ value: VALUE.TWO, suite: SUITE.SPADES });
+    const b = genCard({ value: VALUE.THREE, suite: SUITE.SPADES });
+    const c = genCard({ value: VALUE.FIVE, suite: SUITE.SPADES });
+    const d = genCard({ value: VALUE.SIX, suite: SUITE.SPADES });
+    const e = genCard({ value: VALUE.FOUR, suite: SUITE.DIAMONDS });
 
     const cards = [a, b, c, d, e];
     const hand = evaluate(cards);
@@ -164,11 +154,11 @@ describe("Check Straight", () => {
   });
 
   test("High Straight", () => {
-    const a = genCard({ cardValue: 1, suiteID: 0 });
-    const b = genCard({ cardValue: 11, suiteID: 1 });
-    const c = genCard({ cardValue: 12, suiteID: 2 });
-    const d = genCard({ cardValue: 10, suiteID: 3 });
-    const e = genCard({ cardValue: 13, suiteID: 0 });
+    const a = genCard({ value: VALUE.ACE, suite: SUITE.SPADES });
+    const b = genCard({ value: VALUE.JACK, suite: SUITE.SPADES });
+    const c = genCard({ value: VALUE.QUEEN, suite: SUITE.SPADES });
+    const d = genCard({ value: VALUE.TEN, suite: SUITE.SPADES });
+    const e = genCard({ value: VALUE.KING, suite: SUITE.HEARTS });
 
     const cards = [a, b, c, d, e];
     const hand = evaluate(cards);
@@ -178,13 +168,13 @@ describe("Check Straight", () => {
   });
 
   test("Straight with Two Pair", () => {
-    const a = genCard({ cardValue: 8, suiteID: 0 });
-    const b = genCard({ cardValue: 7, suiteID: 1 });
-    const c = genCard({ cardValue: 5, suiteID: 2 });
-    const d = genCard({ cardValue: 5, suiteID: 3 });
-    const e = genCard({ cardValue: 6, suiteID: 0 });
-    const f = genCard({ cardValue: 4, suiteID: 0 });
-    const g = genCard({ cardValue: 4, suiteID: 1 });
+    const a = genCard({ value: VALUE.EIGHT, suite: SUITE.SPADES });
+    const b = genCard({ value: VALUE.SEVEN, suite: SUITE.SPADES });
+    const c = genCard({ value: VALUE.FIVE, suite: SUITE.SPADES });
+    const d = genCard({ value: VALUE.FIVE, suite: SUITE.HEARTS });
+    const e = genCard({ value: VALUE.SIX, suite: SUITE.HEARTS });
+    const f = genCard({ value: VALUE.FOUR, suite: SUITE.SPADES });
+    const g = genCard({ value: VALUE.FOUR, suite: SUITE.HEARTS });
 
     const cards = [a, b, c, d, e, f, g];
     const hand = evaluate(cards);
@@ -196,12 +186,12 @@ describe("Check Straight", () => {
 
 describe("Check Flush", () => {
   test("Hearts", () => {
-    const a = genCard({ cardValue: 1, suiteID: 0 });
-    const b = genCard({ cardValue: 2, suiteID: 1 });
-    const c = genCard({ cardValue: 3, suiteID: 0 });
-    const d = genCard({ cardValue: 8, suiteID: 0 });
-    const e = genCard({ cardValue: 9, suiteID: 0 });
-    const f = genCard({ cardValue: 7, suiteID: 0 });
+    const a = genCard({ value: VALUE.ACE, suite: SUITE.HEARTS });
+    const b = genCard({ value: VALUE.TWO, suite: SUITE.SPADES });
+    const c = genCard({ value: VALUE.THREE, suite: SUITE.HEARTS });
+    const d = genCard({ value: VALUE.EIGHT, suite: SUITE.HEARTS });
+    const e = genCard({ value: VALUE.NINE, suite: SUITE.HEARTS });
+    const f = genCard({ value: VALUE.SEVEN, suite: SUITE.HEARTS });
 
     const cards = [a, b, c, d, e, f];
     const hand = evaluate(cards);
@@ -211,12 +201,12 @@ describe("Check Flush", () => {
   });
 
   test("Spades with Pair", () => {
-    const a = genCard({ cardValue: 1, suiteID: 0 });
-    const b = genCard({ cardValue: 1, suiteID: 1 });
-    const c = genCard({ cardValue: 3, suiteID: 0 });
-    const d = genCard({ cardValue: 8, suiteID: 0 });
-    const e = genCard({ cardValue: 9, suiteID: 0 });
-    const f = genCard({ cardValue: 7, suiteID: 0 });
+    const a = genCard({ value: VALUE.ACE, suite: SUITE.SPADES });
+    const b = genCard({ value: VALUE.ACE, suite: SUITE.HEARTS });
+    const c = genCard({ value: VALUE.THREE, suite: SUITE.SPADES });
+    const d = genCard({ value: VALUE.EIGHT, suite: SUITE.SPADES });
+    const e = genCard({ value: VALUE.NINE, suite: SUITE.SPADES });
+    const f = genCard({ value: VALUE.SEVEN, suite: SUITE.SPADES });
 
     const cards = [a, b, c, d, e, f];
     const hand = evaluate(cards);
@@ -228,12 +218,12 @@ describe("Check Flush", () => {
 
 describe("Check Straight Flush", () => {
   test("Middle Straight Flush", () => {
-    const a = genCard({ cardValue: 2, suiteID: 0 });
-    const b = genCard({ cardValue: 3, suiteID: 0 });
-    const c = genCard({ cardValue: 4, suiteID: 0 });
-    const d = genCard({ cardValue: 5, suiteID: 0 });
-    const e = genCard({ cardValue: 6, suiteID: 0 });
-    const f = genCard({ cardValue: 6, suiteID: 1 });
+    const a = genCard({ value: VALUE.TWO, suite: SUITE.DIAMONDS });
+    const b = genCard({ value: VALUE.THREE, suite: SUITE.DIAMONDS });
+    const c = genCard({ value: VALUE.FOUR, suite: SUITE.DIAMONDS });
+    const d = genCard({ value: VALUE.FIVE, suite: SUITE.DIAMONDS });
+    const e = genCard({ value: VALUE.SIX, suite: SUITE.DIAMONDS });
+    const f = genCard({ value: VALUE.SIX, suite: SUITE.SPADES });
 
     const cards = [a, b, c, d, e, f];
     const hand = evaluate(cards);
@@ -243,13 +233,13 @@ describe("Check Straight Flush", () => {
   });
 
   test("Royal Flush", () => {
-    const a = genCard({ cardValue: 13, suiteID: 2 });
-    const b = genCard({ cardValue: 12, suiteID: 2 });
-    const c = genCard({ cardValue: 11, suiteID: 2 });
-    const d = genCard({ cardValue: 10, suiteID: 2 });
-    const e = genCard({ cardValue: 9, suiteID: 2 });
-    const f = genCard({ cardValue: 8, suiteID: 2 });
-    const g = genCard({ cardValue: 1, suiteID: 2 });
+    const a = genCard({ value: VALUE.KING, suite: SUITE.HEARTS });
+    const b = genCard({ value: VALUE.QUEEN, suite: SUITE.HEARTS });
+    const c = genCard({ value: VALUE.JACK, suite: SUITE.HEARTS });
+    const d = genCard({ value: VALUE.TEN, suite: SUITE.HEARTS });
+    const e = genCard({ value: VALUE.NINE, suite: SUITE.HEARTS });
+    const f = genCard({ value: VALUE.EIGHT, suite: SUITE.HEARTS });
+    const g = genCard({ value: VALUE.ACE, suite: SUITE.HEARTS });
 
     const cards = [a, b, c, d, e, f, g];
     const hand = evaluate(cards);
@@ -261,13 +251,13 @@ describe("Check Straight Flush", () => {
 
 describe("Bug", () => {
   test("Pair incorrectly throwing error", () => {
-    const a = genCard({ cardValue: 7, suiteID: 0 });
-    const b = genCard({ cardValue: 4, suiteID: 2 });
-    const c = genCard({ cardValue: 1, suiteID: 3 });
-    const d = genCard({ cardValue: 7, suiteID: 3 });
-    const e = genCard({ cardValue: 9, suiteID: 3 });
-    const f = genCard({ cardValue: 11, suiteID: 3 });
-    const g = genCard({ cardValue: 13, suiteID: 1 });
+    const a = genCard({ value: VALUE.SEVEN, suite: SUITE.CLUBS });
+    const b = genCard({ value: VALUE.FOUR, suite: SUITE.HEARTS });
+    const c = genCard({ value: VALUE.ACE, suite: SUITE.SPADES });
+    const d = genCard({ value: VALUE.SEVEN, suite: SUITE.SPADES });
+    const e = genCard({ value: VALUE.NINE, suite: SUITE.SPADES });
+    const f = genCard({ value: VALUE.JACK, suite: SUITE.SPADES });
+    const g = genCard({ value: VALUE.KING, suite: SUITE.HEARTS });
 
     const cards = [a, b, c, d, e, f, g];
     const hand = evaluate(cards);
@@ -277,18 +267,18 @@ describe("Bug", () => {
   });
 
   test("Straight wrong order", () => {
-    const a = genCard({ cardValue: 6, suiteID: 0 });
-    const b = genCard({ cardValue: 3, suiteID: 2 });
-    const c = genCard({ cardValue: 5, suiteID: 3 });
-    const d = genCard({ cardValue: 5, suiteID: 3 });
-    const e = genCard({ cardValue: 11, suiteID: 3 });
-    const f = genCard({ cardValue: 7, suiteID: 3 });
-    const g = genCard({ cardValue: 4, suiteID: 1 });
+    const a = genCard({ value: VALUE.SIX, suite: SUITE.CLUBS });
+    const b = genCard({ value: VALUE.THREE, suite: SUITE.HEARTS });
+    const c = genCard({ value: VALUE.FIVE, suite: SUITE.DIAMONDS });
+    const d = genCard({ value: VALUE.FIVE, suite: SUITE.SPADES });
+    const e = genCard({ value: VALUE.JACK, suite: SUITE.SPADES });
+    const f = genCard({ value: VALUE.SEVEN, suite: SUITE.SPADES });
+    const g = genCard({ value: VALUE.FOUR, suite: SUITE.DIAMONDS });
 
     const cards = [a, b, c, d, e, f, g];
     const hand = evaluate(cards);
 
     expect(hand.handDescription).toBe(HAND.STRAIGHT);
-    expect(hand.bestCards).toStrictEqual([f, a, c, g, b]);
+    expect(hand.bestCards).toStrictEqual([f, a, d, g, b]);
   });
 });
