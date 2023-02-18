@@ -1,34 +1,34 @@
 import { HAND, VALUE } from "./data";
 
 export function evaluate(cards) {
-  const handDescription = bestHand([...cards]);
-  let bestCards = bestHighCards([...cards]);
+  const handDescription = bestHand(cards);
+  let bestCards = bestHighCards(cards);
 
   switch (handDescription) {
     case HAND.ROYAL_FLUSH:
     case HAND.STRAIGHT_FLUSH:
-      bestCards = bestStraightFlushCards([...cards]);
+      bestCards = bestStraightFlushCards(cards);
       break;
     case HAND.FOUR_OF_A_KIND:
-      bestCards = bestPairOfSizeCards([...cards], 3);
+      bestCards = bestPairOfSizeCards(cards, 3);
       break;
     case HAND.FULL_HOUSE:
-      bestCards = bestFullHouseCards([...cards]);
+      bestCards = bestFullHouseCards(cards);
       break;
     case HAND.FLUSH:
-      bestCards = bestFlushCards([...cards]);
+      bestCards = bestFlushCards(cards);
       break;
     case HAND.STRAIGHT:
-      bestCards = bestStraightCards([...cards]);
+      bestCards = bestStraightCards(cards);
       break;
     case HAND.THREE_OF_A_KIND:
-      bestCards = bestPairOfSizeCards([...cards], 2);
+      bestCards = bestPairOfSizeCards(cards, 2);
       break;
     case HAND.TWO_PAIR:
-      bestCards = bestTwoPairCards([...cards]);
+      bestCards = bestTwoPairCards(cards);
       break;
     case HAND.PAIR:
-      bestCards = bestPairOfSizeCards([...cards]);
+      bestCards = bestPairOfSizeCards(cards);
       break;
     default:
       break;
@@ -44,15 +44,15 @@ export function evaluate(cards) {
 
 function bestHand(cards) {
   if (cards.length === 0) return "";
-  if (isRoyalFlush([...cards])) return HAND.ROYAL_FLUSH;
-  if (isStraightFlush([...cards])) return HAND.STRAIGHT_FLUSH;
-  if (isFourOfAKind([...cards])) return HAND.FOUR_OF_A_KIND;
-  if (isFullHouse([...cards])) return HAND.FULL_HOUSE;
-  if (isFlush([...cards])) return HAND.FLUSH;
-  if (isStraight([...cards])) return HAND.STRAIGHT;
-  if (isThreeOfAKind([...cards])) return HAND.THREE_OF_A_KIND;
-  if (isTwoPair([...cards])) return HAND.TWO_PAIR;
-  if (isPair([...cards])) return HAND.PAIR;
+  if (isRoyalFlush(cards)) return HAND.ROYAL_FLUSH;
+  if (isStraightFlush(cards)) return HAND.STRAIGHT_FLUSH;
+  if (isFourOfAKind(cards)) return HAND.FOUR_OF_A_KIND;
+  if (isFullHouse(cards)) return HAND.FULL_HOUSE;
+  if (isFlush(cards)) return HAND.FLUSH;
+  if (isStraight(cards)) return HAND.STRAIGHT;
+  if (isThreeOfAKind(cards)) return HAND.THREE_OF_A_KIND;
+  if (isTwoPair(cards)) return HAND.TWO_PAIR;
+  if (isPair(cards)) return HAND.PAIR;
   return HAND.HIGH_CARD;
 }
 
