@@ -4,7 +4,6 @@ RESET CSS * {
   padding: 0;
 }
 
-/* GLOBALS  STYLE */
 .App {
   display: flex;
   align-items: center;
@@ -19,31 +18,7 @@ RESET CSS * {
 .App-link {
   color: #61dafb;
 }
-/* CARD STYLE */
 
-.board {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  flex-direction: column;
-  row-gap: 2em;
-  width: 50%;
-  height: 50%;
-}
-
-.card-container {
-  border-radius: 7px;
-  margin: 10px;
-}
-
-.cardplaceholder-container {
-  border-radius: 7px;
-  margin: 10px;
-  visibility: hidden;
-}
-
-/* BUTTON */
 button {
   background: none;
   border: 1px solid #fff;
@@ -61,21 +36,27 @@ button:hover {
   color: #444;
 }
 
-/* HAND DESCRIPTION*/
+label {
+  font-size: large;
+  color: black;
+  font-weight: bold;
+  float: left;
+}
 
-.hand-description {
+img {
+  width: 110%;
+  height: 110%;
+}
+
+.board {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
   flex-direction: column;
-  background-color: darkslategray;
-  height: minmax(100px, auto);
-  width: minmax(375px, auto);
-  padding: 20px;
-  border-style: solid;
-  border-color: black;
-  border-radius: 8px;
+  row-gap: 2em;
+  width: 50%;
+  height: 50%;
 }
 
 .community {
@@ -96,14 +77,28 @@ button:hover {
   width: minmax(150px, auto);
 }
 
-label {
-  font-size: large;
-  color: black;
-  font-weight: bold;
-  float: left;
+.hand-description {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex-direction: column;
+  background-color: darkslategray;
+  height: minmax(100px, auto);
+  width: minmax(375px, auto);
+  padding: 20px;
+  border-style: solid;
+  border-color: black;
+  border-radius: 8px;
 }
 
-img {
-  width: 110%;
-  height: 110%;
+.card-container {
+  border-radius: 7px;
+  margin: 10px;
+}
+
+.cardplaceholder-container {
+  border-radius: 7px;
+  margin: 10px;
+  visibility: hidden;
 }
