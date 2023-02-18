@@ -11,57 +11,70 @@ export const GAME_STATE = {
   REFRESH: "refresh",
 };
 
+export const HAND = {
+  ROYAL_FLUSH: "Royal Flush",
+  STRAIGHT_FLUSH: "Straight Flush",
+  FOUR_OF_A_KIND: "Four of a Kind",
+  FULL_HOUSE: "Full House",
+  FLUSH: "Flush",
+  STRAIGHT: "Straight",
+  THREE_OF_A_KIND: "Three of a Kind",
+  TWO_PAIR: "Two Pair",
+  PAIR: "Pair",
+  HIGH_CARD: "High Card",
+};
+
 export const VALUE = {
   ACE: {
-    number: 0,
+    number: 1,
     name: "ace",
   },
   TWO: {
-    number: 1,
+    number: 2,
     name: "two",
   },
   THREE: {
-    number: 2,
+    number: 3,
     name: "three",
   },
   FOUR: {
-    number: 3,
+    number: 4,
     name: "four",
   },
   FIVE: {
-    number: 4,
+    number: 5,
     name: "five",
   },
   SIX: {
-    number: 5,
+    number: 6,
     name: "six",
   },
   SEVEN: {
-    number: 6,
+    number: 7,
     name: "seven",
   },
   EIGHT: {
-    number: 7,
+    number: 8,
     name: "eight",
   },
   NINE: {
-    number: 8,
+    number: 9,
     name: "nine",
   },
   TEN: {
-    number: 9,
+    number: 10,
     name: "ten",
   },
   JACK: {
-    number: 10,
+    number: 11,
     name: "jack",
   },
   QUEEN: {
-    number: 11,
+    number: 12,
     name: "queen",
   },
   KING: {
-    number: 12,
+    number: 13,
     name: "king",
   },
 };
@@ -84,58 +97,3 @@ export const SUITE = {
     name: "diamonds",
   },
 };
-
-// export const numbers = [
-//   {
-//     id: 0,
-//     number: "ace",
-//   },
-//   {
-//     id: 1,
-//     number: "two",
-//   },
-//   {
-//     id: 2,
-//     number: "three",
-//   },
-//   {
-//     id: 3,
-//     number: "four",
-//   },
-//   {
-//     id: 4,
-//     number: "five",
-//   },
-//   {
-//     id: 5,
-//     number: "six",
-//   },
-//   {
-//     id: 6,
-//     number: "seven",
-//   },
-//   {
-//     id: 7,
-//     number: "eight",
-//   },
-//   {
-//     id: 8,
-//     number: "nine",
-//   },
-//   {
-//     id: 9,
-//     number: "ten",
-//   },
-//   {
-//     id: 10,
-//     number: "jack",
-//   },
-//   {
-//     id: 11,
-//     number: "queen",
-//   },
-//   {
-//     id: 12,
-//     number: "king",
-//   },
-// ];
