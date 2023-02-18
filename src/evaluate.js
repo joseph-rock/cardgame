@@ -1,21 +1,5 @@
-export const HAND = {
-  ROYAL_FLUSH: "Royal Flush",
-  STRAIGHT_FLUSH: "Straight Flush",
-  FOUR_OF_A_KIND: "Four of a Kind",
-  FULL_HOUSE: "Full House",
-  FLUSH: "Flush",
-  STRAIGHT: "Straight",
-  THREE_OF_A_KIND: "Three of a Kind",
-  TWO_PAIR: "Two Pair",
-  PAIR: "Pair",
-  HIGH_CARD: "High Card",
-};
+import { HAND, VALUE } from "./data";
 
-/**
- *
- * @param {*} cards
- * @returns {*}
- */
 export function evaluate(cards) {
   const handDescription = bestHand([...cards]);
   let bestCards = bestHighCards([...cards]);
@@ -56,6 +40,8 @@ export function evaluate(cards) {
   };
 }
 
+//------------Determine Best Hand-----------------
+
 function bestHand(cards) {
   if (cards.length === 0) return "";
   if (isRoyalFlush([...cards])) return HAND.ROYAL_FLUSH;
@@ -69,8 +55,6 @@ function bestHand(cards) {
   if (isPair([...cards])) return HAND.PAIR;
   return HAND.HIGH_CARD;
 }
-
-//------------Determine Best Hand-----------------
 
 function pairOfSize(cards, windowOffset = 1) {
   const copy = sortByValue(cards);
@@ -153,12 +137,12 @@ function bestHighCards(cards, returnCards = []) {
   return returnCards;
 }
 
-function bestPairOfSizeCards(cards, size = 1, returnCards = []) {
+function bestPairOfSizeCards(cards, windowOffset = 1, returnCards = []) {
   const copy = reverseSortByValue(cards);
 
-  for (let i = 0; i < copy.length - size; i++) {
-    if (copy[i].number === copy[i + size].number) {
-      returnCards.push(...copy.splice(i, size + 1));
+  for (let i = 0; i < copy.length - windowOffset; i++) {
+    if (copy[i].number === copy[i + windowOffset].number) {
+      returnCards.push(...copy.splice(i, windowOffset + 1));
     }
   }
 
@@ -166,24 +150,7 @@ function bestPairOfSizeCards(cards, size = 1, returnCards = []) {
 }
 
 function bestTwoPairCards(cards) {
-  const copy = reverseSortByValue(cards);
-  let returnCards = [];
-
-  for (let i = 0; i < copy.length - 1; i++) {
-    if (copy[i].number === copy[i + 1].number) {
-      returnCards = copy.splice(i, 2);
-      break;
-    }
-  }
-
-  for (let i = 0; i < copy.length - 1; i++) {
-    if (copy[i].number === copy[i + 1].number) {
-      returnCards.push(...copy.splice(i, 2));
-      break;
-    }
-  }
-
-  return bestHighCards(copy, returnCards);
+  return bestPairOfSizeCards(cards);
 }
 
 function bestFullHouseCards(cards) {
@@ -191,7 +158,7 @@ function bestFullHouseCards(cards) {
   let returnCards = [];
   for (let i = 0; i < copy.length - 2; i++) {
     if (copy[i].number === copy[i + 2].number) {
-      returnCards = copy.splice(i, 3);
+      returnCards.push(...copy.splice(i, 3));
       break;
     }
   }
@@ -199,7 +166,7 @@ function bestFullHouseCards(cards) {
   for (let i = 0; i < copy.length - 1; i++) {
     if (copy[i].number === copy[i + 1].number) {
       returnCards.push(...copy.splice(i, 2));
-      return returnCards;
+      break;
     }
   }
   return returnCards;
@@ -258,8 +225,8 @@ function reverseSortByValue(cards, aceHigh = false) {
 
   if (aceHigh) {
     while (
-      copy.some((card) => card.number !== 0) &&
-      copy[copy.length - 1].number === 0
+      copy.some((card) => card.number !== VALUE.ACE.number) &&
+      copy[copy.length - 1].number === VALUE.ACE.number
     ) {
       copy.unshift(copy.pop());
     }
@@ -293,8 +260,8 @@ function removeDuplicateValues(cards) {
  */
 function flushSuite(cards) {
   const copy = sortBySuite(cards);
-  for (let i = 4; i < copy.length; i++) {
-    if (copy[i].suite.localeCompare(copy[i - 4].suite) === 0) {
+  for (let i = 0; i < copy.length - 4; i++) {
+    if (copy[i].suite.localeCompare(copy[i + 4].suite) === 0) {
       return copy[i].suite;
     }
   }
@@ -314,8 +281,8 @@ function cardsOfSuite(cards, suite) {
 function isHighStraight(cards) {
   const copy = removeDuplicateValues(cards);
   return (
-    copy[copy.length - 1].number === 12 &&
-    copy[0].number === 0 &&
+    copy[copy.length - 1].number === VALUE.KING.number &&
+    copy[0].number === VALUE.ACE.number &&
     copy[copy.length - 1].number - copy[copy.length - 4].number === 3
   );
 }
