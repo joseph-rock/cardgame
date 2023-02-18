@@ -281,4 +281,22 @@ describe("Bug", () => {
     expect(hand.handDescription).toBe(HAND.STRAIGHT);
     expect(hand.bestCards).toStrictEqual([f, a, d, g, b]);
   });
+
+  test("Two Pair wrong order", () => {
+    const a = genCard({ value: VALUE.ACE, suite: SUITE.CLUBS });
+    const b = genCard({ value: VALUE.SEVEN, suite: SUITE.DIAMONDS });
+    const c = genCard({ value: VALUE.FIVE, suite: SUITE.SPADES });
+    const d = genCard({ value: VALUE.JACK, suite: SUITE.HEARTS });
+    const e = genCard({ value: VALUE.FIVE, suite: SUITE.DIAMONDS });
+    const f = genCard({ value: VALUE.TWO, suite: SUITE.CLUBS });
+    const g = genCard({ value: VALUE.TWO, suite: SUITE.HEARTS });
+
+    const cards = [a, b, c, d, e, f, g];
+    const hand = evaluate(cards);
+
+    console.log(hand.bestCards);
+
+    expect(hand.handDescription).toBe(HAND.TWO_PAIR);
+    expect(hand.bestCards).toStrictEqual([c, e, f, g, a]);
+  });
 });

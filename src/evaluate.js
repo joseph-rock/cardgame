@@ -129,7 +129,7 @@ function isRoyalFlush(cards) {
 //-----------Cards of Best Hand--------------
 
 function bestHighCards(cards, returnCards = []) {
-  const reverseSorted = reverseSortByValue(cards, true);
+  const reverseSorted = reverseSortByValue(cards);
 
   // Fill returnCard list until 5 cards are present
   while (returnCards.length < 5) {
@@ -139,11 +139,12 @@ function bestHighCards(cards, returnCards = []) {
 }
 
 function bestPairOfSizeCards(cards, windowOffset = 1, returnCards = []) {
-  const reverseSorted = reverseSortByValue(cards, true);
+  const reverseSorted = reverseSortByValue(cards);
 
   for (let i = 0; i < reverseSorted.length - windowOffset; i++) {
     if (reverseSorted[i].number === reverseSorted[i + windowOffset].number) {
       returnCards.push(...reverseSorted.splice(i, windowOffset + 1));
+      break;
     }
   }
 
@@ -151,7 +152,18 @@ function bestPairOfSizeCards(cards, windowOffset = 1, returnCards = []) {
 }
 
 function bestTwoPairCards(cards) {
-  return bestPairOfSizeCards(cards);
+  const reverseSorted = reverseSortByValue(cards);
+  let returnCards = [];
+
+  // Find highest Pair cards
+  for (let i = 0; i < reverseSorted.length - 1; i++) {
+    if (reverseSorted[i].number === reverseSorted[i + 1].number) {
+      returnCards.push(...reverseSorted.splice(i, 2));
+      break;
+    }
+  }
+
+  return bestPairOfSizeCards(reverseSorted, 1, returnCards);
 }
 
 function bestFullHouseCards(cards) {
@@ -179,13 +191,13 @@ function bestFullHouseCards(cards) {
 function bestFlushCards(cards) {
   const suite = flushSuite(cards);
   const flushCards = cardsOfSuite(cards, suite);
-  const reverseOrdered = reverseSortByValue(flushCards, true);
+  const reverseOrdered = reverseSortByValue(flushCards);
   return reverseOrdered.slice(0, 5);
 }
 
 function bestStraightCards(cards) {
   const cardsSet = removeDuplicateValues(cards);
-  const reverseOrdered = reverseSortByValue(cardsSet);
+  const reverseOrdered = reverseSortByValue(cardsSet, false);
 
   if (isHighStraight(reverseOrdered)) {
     reverseOrdered.unshift(reverseOrdered.pop());
@@ -221,9 +233,9 @@ function sortByValue(cards) {
 /**
  * Returns copy of a list of Card objects and sorts high to low based on card value.
  * King is highest value, Ace is lowest value
- * Option aceHigh will make Ace highest value and Two lowest value.
+ * Option aceHigh will shift any Ace to front of list.
  */
-function reverseSortByValue(cards, aceHigh = false) {
+function reverseSortByValue(cards, aceHigh = true) {
   const copy = [...cards];
   copy.sort((a, b) => b.number - a.number);
 
