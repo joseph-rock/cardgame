@@ -129,59 +129,59 @@ function isRoyalFlush(cards) {
 //-----------Cards of Best Hand--------------
 
 function bestHighCards(cards, returnCards = []) {
-  const reverseSorted = sortByValue(cards);
+  const sorted = sortByValue(cards);
 
   // Fill returnCard list until 5 cards are present
   while (returnCards.length < 5) {
-    returnCards.push(reverseSorted.shift());
+    returnCards.push(sorted.shift());
   }
   return returnCards;
 }
 
 function bestPairOfSizeCards(cards, windowOffset = 1, returnCards = []) {
-  const reverseSorted = sortByValue(cards);
+  const sorted = sortByValue(cards);
 
-  for (let i = 0; i < reverseSorted.length - windowOffset; i++) {
-    if (reverseSorted[i].number === reverseSorted[i + windowOffset].number) {
-      returnCards.push(...reverseSorted.splice(i, windowOffset + 1));
+  for (let i = 0; i < sorted.length - windowOffset; i++) {
+    if (sorted[i].number === sorted[i + windowOffset].number) {
+      returnCards.push(...sorted.splice(i, windowOffset + 1));
       break;
     }
   }
 
-  return bestHighCards(reverseSorted, returnCards);
+  return bestHighCards(sorted, returnCards);
 }
 
 function bestTwoPairCards(cards) {
-  const reverseSorted = sortByValue(cards);
+  const sorted = sortByValue(cards);
   let returnCards = [];
 
   // Find highest Pair cards
-  for (let i = 0; i < reverseSorted.length - 1; i++) {
-    if (reverseSorted[i].number === reverseSorted[i + 1].number) {
-      returnCards.push(...reverseSorted.splice(i, 2));
+  for (let i = 0; i < sorted.length - 1; i++) {
+    if (sorted[i].number === sorted[i + 1].number) {
+      returnCards.push(...sorted.splice(i, 2));
       break;
     }
   }
 
-  return bestPairOfSizeCards(reverseSorted, 1, returnCards);
+  return bestPairOfSizeCards(sorted, 1, returnCards);
 }
 
 function bestFullHouseCards(cards) {
-  const reverseSorted = sortByValue(cards);
+  const sorted = sortByValue(cards);
   let returnCards = [];
 
   // Find highest Three of a Kind cards
-  for (let i = 0; i < reverseSorted.length - 2; i++) {
-    if (reverseSorted[i].number === reverseSorted[i + 2].number) {
-      returnCards.push(...reverseSorted.splice(i, 3));
+  for (let i = 0; i < sorted.length - 2; i++) {
+    if (sorted[i].number === sorted[i + 2].number) {
+      returnCards.push(...sorted.splice(i, 3));
       break;
     }
   }
 
   // Find highest card with at least one Pair
-  for (let i = 0; i < reverseSorted.length - 1; i++) {
-    if (reverseSorted[i].number === reverseSorted[i + 1].number) {
-      returnCards.push(...reverseSorted.splice(i, 2));
+  for (let i = 0; i < sorted.length - 1; i++) {
+    if (sorted[i].number === sorted[i + 1].number) {
+      returnCards.push(...sorted.splice(i, 2));
       break;
     }
   }
