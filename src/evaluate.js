@@ -10,7 +10,7 @@ export function evaluate(cards) {
       bestCards = bestStraightFlushCards(cards);
       break;
     case HAND.FOUR_OF_A_KIND:
-      bestCards = bestPairOfSizeCards(cards, 3);
+      bestCards = bestPairOfSizeCards({ cards: cards, windowOffset: 3 });
       break;
     case HAND.FULL_HOUSE:
       bestCards = bestFullHouseCards(cards);
@@ -22,13 +22,13 @@ export function evaluate(cards) {
       bestCards = bestStraightCards(cards);
       break;
     case HAND.THREE_OF_A_KIND:
-      bestCards = bestPairOfSizeCards(cards, 2);
+      bestCards = bestPairOfSizeCards({ cards: cards, windowOffset: 2 });
       break;
     case HAND.TWO_PAIR:
       bestCards = bestTwoPairCards(cards);
       break;
     case HAND.PAIR:
-      bestCards = bestPairOfSizeCards(cards);
+      bestCards = bestPairOfSizeCards({ cards: cards });
       break;
     default:
       break;
@@ -138,7 +138,7 @@ function bestHighCards(cards, returnCards = []) {
   return returnCards;
 }
 
-function bestPairOfSizeCards(cards, windowOffset = 1, returnCards = []) {
+function bestPairOfSizeCards({ cards, windowOffset = 1, returnCards = [] }) {
   const sorted = sortByValue(cards);
 
   for (let i = 0; i < sorted.length - windowOffset; i++) {
@@ -163,7 +163,11 @@ function bestTwoPairCards(cards) {
     }
   }
 
-  return bestPairOfSizeCards(sorted, 1, returnCards);
+  return bestPairOfSizeCards({
+    cards: sorted,
+    windowOffset: 1,
+    returnCards: returnCards,
+  });
 }
 
 function bestFullHouseCards(cards) {
@@ -185,28 +189,29 @@ function bestFullHouseCards(cards) {
       break;
     }
   }
+
   return returnCards;
 }
 
 function bestFlushCards(cards) {
   const suite = flushSuite(cards);
   const flushCards = cardsOfSuite(cards, suite);
-  const reverseOrdered = sortByValue(flushCards);
-  return reverseOrdered.slice(0, 5);
+  const sorted = sortByValue(flushCards);
+  return sorted.slice(0, 5);
 }
 
 function bestStraightCards(cards) {
   const cardsSet = removeDuplicateValues(cards);
-  const reverseOrdered = sortByValue(cardsSet, false);
+  const sorted = sortByValue(cardsSet, false);
 
-  if (isHighStraight(reverseOrdered)) {
-    reverseOrdered.unshift(reverseOrdered.pop());
-    return reverseOrdered.slice(0, 5);
+  if (isHighStraight(sorted)) {
+    sorted.unshift(sorted.pop());
+    return sorted.slice(0, 5);
   }
 
-  for (let i = 0; i < reverseOrdered.length - 4; i++) {
-    if (reverseOrdered[i].number - reverseOrdered[i + 4].number === 4) {
-      return reverseOrdered.slice(i, i + 5);
+  for (let i = 0; i < sorted.length - 4; i++) {
+    if (sorted[i].number - sorted[i + 4].number === 4) {
+      return sorted.slice(i, i + 5);
     }
   }
 
