@@ -294,8 +294,6 @@ describe("Bug", () => {
     const cards = [a, b, c, d, e, f, g];
     const hand = evaluate(cards);
 
-    console.log(hand.bestCards);
-
     expect(hand.handDescription).toBe(HAND.TWO_PAIR);
     expect(hand.bestCards).toStrictEqual([c, e, f, g, a]);
   });

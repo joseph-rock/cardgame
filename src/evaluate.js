@@ -129,7 +129,7 @@ function isRoyalFlush(cards) {
 //-----------Cards of Best Hand--------------
 
 function bestHighCards(cards, returnCards = []) {
-  const reverseSorted = reverseSortByValue(cards);
+  const reverseSorted = sortByValue(cards);
 
   // Fill returnCard list until 5 cards are present
   while (returnCards.length < 5) {
@@ -139,7 +139,7 @@ function bestHighCards(cards, returnCards = []) {
 }
 
 function bestPairOfSizeCards(cards, windowOffset = 1, returnCards = []) {
-  const reverseSorted = reverseSortByValue(cards);
+  const reverseSorted = sortByValue(cards);
 
   for (let i = 0; i < reverseSorted.length - windowOffset; i++) {
     if (reverseSorted[i].number === reverseSorted[i + windowOffset].number) {
@@ -152,7 +152,7 @@ function bestPairOfSizeCards(cards, windowOffset = 1, returnCards = []) {
 }
 
 function bestTwoPairCards(cards) {
-  const reverseSorted = reverseSortByValue(cards);
+  const reverseSorted = sortByValue(cards);
   let returnCards = [];
 
   // Find highest Pair cards
@@ -167,7 +167,7 @@ function bestTwoPairCards(cards) {
 }
 
 function bestFullHouseCards(cards) {
-  const reverseSorted = reverseSortByValue(cards);
+  const reverseSorted = sortByValue(cards);
   let returnCards = [];
 
   // Find highest Three of a Kind cards
@@ -191,13 +191,13 @@ function bestFullHouseCards(cards) {
 function bestFlushCards(cards) {
   const suite = flushSuite(cards);
   const flushCards = cardsOfSuite(cards, suite);
-  const reverseOrdered = reverseSortByValue(flushCards);
+  const reverseOrdered = sortByValue(flushCards);
   return reverseOrdered.slice(0, 5);
 }
 
 function bestStraightCards(cards) {
   const cardsSet = removeDuplicateValues(cards);
-  const reverseOrdered = reverseSortByValue(cardsSet, false);
+  const reverseOrdered = sortByValue(cardsSet, false);
 
   if (isHighStraight(reverseOrdered)) {
     reverseOrdered.unshift(reverseOrdered.pop());
@@ -221,21 +221,11 @@ function bestStraightFlushCards(cards) {
 //-----------Utils---------------
 
 /**
- * Returns copy of a list of Card objects and sorts low to high based on card value.
- * Ace is lowest value, King is highest value.
- */
-function sortByValue(cards) {
-  const copy = [...cards];
-  copy.sort((a, b) => a.number - b.number);
-  return copy;
-}
-
-/**
  * Returns copy of a list of Card objects and sorts high to low based on card value.
  * King is highest value, Ace is lowest value
  * Option aceHigh will shift any Ace to front of list.
  */
-function reverseSortByValue(cards, aceHigh = true) {
+function sortByValue(cards, aceHigh = true) {
   const copy = [...cards];
   copy.sort((a, b) => b.number - a.number);
 
@@ -264,7 +254,7 @@ function sortBySuite(cards) {
  * Returns sorted list of cards with duplicate values removed
  */
 function removeDuplicateValues(cards) {
-  const sorted = sortByValue(cards);
+  const sorted = sortByValue(cards, false);
   return sorted.filter((card, index) =>
     index + 1 === sorted.length
       ? card
@@ -298,12 +288,11 @@ function cardsOfSuite(cards, suite) {
  */
 function isHighStraight(cards) {
   const cardsSet = removeDuplicateValues(cards);
-  const startIndex = cardsSet.length - 4;
   const lastIndex = cardsSet.length - 1;
   return (
-    cardsSet[lastIndex].number === VALUE.KING.number &&
-    cardsSet[0].number === VALUE.ACE.number &&
-    cardsSet[lastIndex].number - cardsSet[startIndex].number === 3
+    cardsSet[0].number === VALUE.KING.number &&
+    cardsSet[lastIndex].number === VALUE.ACE.number &&
+    cardsSet[0].number - cardsSet[3].number === 3
   );
 }
 
